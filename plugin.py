@@ -25,7 +25,7 @@
     </description>
     <params>
         <param field="Mode1" label="Hostname Prefix" width="200px" required="true" default="wiz_"/>
-        <param field="Mode2" label="Subnet" width="200px" required="true" default="192.168.2.0/24"/>
+        <param field="Mode2" label="Subnet" width="200px" required="true" default="192.168.0.0/24"/>
         <param field="Mode6" label="Debug" width="150px">
             <options>
                 <option label="None" value="0"  default="true" />
@@ -88,7 +88,7 @@ class BasePlugin:
             for Device in Devices:
                 if ((hostName == Devices[Device].DeviceID)): deviceFound = True
             if (deviceFound == False):
-                Domoticz.Device(Name=hostName, DeviceID=hostName,  Unit=len(Devices)+1, Type=241, Subtype=8, Switchtype=7, Image=0).Create()
+                Domoticz.Device(Name=hostName, DeviceID=hostName,  Unit=len(Devices)+1, Type=241, Subtype=4, Switchtype=7, Image=0).Create()
 
         # Create/Start update thread
         self.updateThread = threading.Thread(name="WiZUpdateThread", target=BasePlugin.handleThread, args=(self,))
@@ -163,8 +163,11 @@ class BasePlugin:
             mode = rgb.get("m")
             cw = rgb.get("cw")
             ww = rgb.get("ww")
+            red = rgb.get("r")
+            green = rgb.get("g")
+            blue = rgb.get("b")
 
-            mJSON = bytes('{"method":"setPilot","params":{"src":"udp","state":true,"c":' + str(cw) + ',"w":' + str(ww) + '}}', 'utf-8')
+            mJSON = bytes('{"method":"setPilot","params":{"src":"udp","state":true,"r":' + str(red) + ',"g":' + str(green) + ',"b":' + str(blue) + ',"c":' + str(cw) + ',"w":' + str(ww) + '}}', 'utf-8')
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             try:
                 sock.sendto(mJSON, (host, port))
